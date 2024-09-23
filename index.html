@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: rgba(242, 242, 242, 0.8);
+            --text-color: #333;
+            --background-color: rgba(255, 255, 255, 0.9);
+            --error-color: #e74c3c;
+        }
+
+        .dark-theme {
+            --primary-color: #64b5f6;
+            --secondary-color: rgba(66, 66, 66, 0.8);
+            --text-color: #f5f5f5;
+            --background-color: rgba(33, 33, 33, 0.9);
+            --error-color: #ff5252;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: color 0.3s ease;
+            background-image: url('https://media.istockphoto.com/id/93442232/photo/bright-white-brick-wall-texture-background-pattern.webp?a=1&b=1&s=612x612&w=0&k=20&c=-QDlJYSa2gu6lrOVpbTveSyieSPGQVQG3uPnQRS5rtc=');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            background-color: var(--background-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .search-container {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            font-size: 1rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        #searchButton {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #searchButton:hover {
+            color: var(--text-color);
+        }
+
+        .history-container {
+            margin-top: 30px;
+        }
+
+        h2 {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        #searchHistory {
+            list-style-type: none;
+        }
+
+        #searchHistory li {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #searchHistory li:hover {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .delete-item {
+            background: none;
+            border: none;
+            color: var(--error-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-item:hover {
+            transform: scale(1.2);
+        }
+
+        #clearHistoryButton {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 1rem;
+            background-color: var(--error-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #clearHistoryButton:hover {
+            opacity: 0.9;
+        }
+
+        #themeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+        }
+
+        #themeToggle:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            #searchInput,
+            #searchButton {
+                font-size: 0.9rem;
+            }
+
+            #themeToggle {
+                top: 10px;
+                right: 10px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Search Engine</h1>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="What are you looking for?">
+            <button id="searchButton">🔍</button>
+        </div>
+        <div class="history-container">
+            <h2>Recent Searches</h2>
+            <ul id="searchHistory"></ul>
+            <button id="clearHistoryButton">Clear History</button>
+        </div>
+    </div>
+    <button id="themeToggle">🌙</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const searchHistory = document.getElementById('searchHistory');
+            const clearHistoryButton = document.getElementById('clearHistoryButton');
+            const themeToggle = document.getElementById('themeToggle');
+
+            let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+            let isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+
+            function updateHistoryDisplay() {
+                searchHistory.innerHTML = '';
+                history.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${item.term} (${new Date(item.timestamp).toLocaleString()})</span>
+                        <button class="delete-item" data-index="${index}">❌</button>
+                    `;
+                    li.style.animationDelay = `${index * 0.1}s`;
+                    li.classList.add('fade-in');
+                    li.querySelector('span').addEventListener('click', () => {
+                        searchInput.value = item.term;
+                        performSearch();
+                    });
+                    searchHistory.appendChild(li);
+                });
+            }
+
+            function addToHistory(term) {
+                const newItem = { term, timestamp: new Date().toISOString() };
+                history = [newItem, ...history.filter(item => item.term !== term)].slice(0, 5);
+                localStorage.setItem('searchHistory', JSON.stringify(history));
+                updateHistoryDisplay();
+            }
+
+            function performSearch() {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    console.log(`Searching for: ${searchTerm}`);
+                    addToHistory(searchTerm);
+                    searchInput.value = '';
+                }
+            }
+
+            function toggleTheme() {
+                isDarkTheme = !isDarkTheme;
+                document.body.classList.toggle('dark-theme', isDarkTheme);
+                localStorage.setItem('isDarkTheme', isDarkTheme);
+                themeToggle.textContent = isDarkTheme ? '☀️' : '🌙';
+            }
+
+            searchButton.addEventListener('click', performSearch);
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            clearHistoryButton.addEventListener('click', () => {
+                history = [];
+                localStorage.removeItem('searchHistory');
+                updateHistoryDisplay();
+            });
+
+            searchHistory.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-item')) {
+                    const index = e.target.getAttribute('data-index');
+                    history.splice(index, 1);
+                    localStorage.setItem('searchHistory', JSON.stringify(history));
+                    updateHistoryDisplay();
+                }
+            });
+
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // Initialize
+            updateHistoryDisplay();
+            document.body.classList.toggle('dark-theme', isDarkTheme);
+            themeToggle.textContent = isDarkTheme ? '☀️' : '🌙';
+        });
+    </script>
+</body>
+
+</html>
